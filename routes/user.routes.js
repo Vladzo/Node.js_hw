@@ -7,10 +7,10 @@ router.get('/', userController.getAllUsers);
 
 router.get('/:userId', userMiddleware.isUserAlreadyExist, userController.getUserById);
 
-router.post('/create', userMiddleware.canUserRegister, userController.createUser);
+router.post('/', userMiddleware.canUserRegister, userController.createUser);
 
-router.delete('/delete/:userId', userMiddleware.isUserAlreadyExist, userController.removeUserById);
+router.delete('/:userId', userMiddleware.isUserAlreadyExist, userController.removeUserById);
 
-router.put('/update/:userId', userMiddleware.isUserAlreadyExist, userController.updateUserById);
+router.put('/:userId', userMiddleware.isUserAlreadyExist, userController.updateUserById);
 
 module.exports = router;
