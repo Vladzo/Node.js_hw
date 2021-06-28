@@ -37,15 +37,8 @@ async function updateUser(user, userId) {
     let users = await readFilePromise(pathToDb);
     users = JSON.parse(users.toString());
 
-    users.forEach((u) => {
-        if (u.id.toString() === userId.toString()) {
-            for (const k in u) {
-                if (k !== 'id') {
-                    u[k] = user[k];
-                }
-            }
-        }
-    });
+    const index = users.findIndex((u) => u.id === +userId);
+    users[index] = { ...users[index], ...user };
 
     await writeFilePromise(pathToDb, JSON.stringify(users));
 }
