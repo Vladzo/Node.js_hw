@@ -2,7 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 
 const { userRouter } = require('./routes');
-const { constants } = require('./constants');
+const { constants, responceCodesEnum } = require('./constants');
 
 const app = express();
 
@@ -31,7 +31,7 @@ function _handleErrors(err, req, res, next) {
 
 function _notFoundHandler(err, req, res, next) {
   next({
-    status: err.status || 404,
+    status: err.status || responceCodesEnum.NOT_FOUND,
     message: err.message || constants.ROUTE_NOT_FOUND
   });
 }

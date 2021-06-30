@@ -24,9 +24,9 @@ module.exports = {
   canUserRegister: async (req, res, next) => {
     try {
       const { email } = req.body;
-      const user = await User.find({ email });
+      const user = await User.findOne({ email });
 
-      if (user.length) {
+      if (user) {
         throw new ErrorHandler(responceCodesEnum.NOT_ALLOWED, CANT_REGISTER.message, CANT_REGISTER.code);
       }
 
