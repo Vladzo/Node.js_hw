@@ -1,33 +1,38 @@
-const { userService } = require('../services');
-const { ERROR_USER_NOT_FOUND } = require('../constants');
-const { ERROR_USER_ALREADY_EXIST } = require('../constants');
+const { User } = require('../dataBase');
+const { responceCodesEnum } = require('../constants');
+const { ErrorHandler, errorMessages: { RECORD_NOT_FOUND, CANT_REGISTER } } = require('../errors');
 
 module.exports = {
-    isUserAlreadyExist: async (req, res, next) => {
-        const users = await userService.getAllUsersFromDb();
-        const { userId } = req.params;
+  isUserAlreadyExist: async (req, res, next) => {
+    try {
+      const { userId } = req.params;
 
-        const user = users.find((u) => u.id.toString() === userId.toString());
+      const user = await User.findById(userId);
 
-        if (!user) {
-            throw new Error(ERROR_USER_NOT_FOUND);
-        }
+      if (!user) {
+        throw new ErrorHandler(responceCodesEnum.NOT_FOUND, RECORD_NOT_FOUND.message, RECORD_NOT_FOUND.code);
+      }
 
-        req.user = user;
+      req.user = user;
 
-        next();
-    },
-
-    canUserRegister: async (req, res, next) => {
-        const users = await userService.getAllUsersFromDb();
-        const { email } = req.body;
-
-        const user = users.find((u) => u.email === email);
-
-        if (user) {
-            throw new Error(ERROR_USER_ALREADY_EXIST);
-        }
-
-        next();
+      next();
+    } catch (err) {
+      next(err);
     }
+  },
+
+  canUserRegister: async (req, res, next) => {
+    try {
+      const { email } = req.body;
+      const user = await User.find({ email });
+
+      if (user.length) {
+        throw new ErrorHandler(responceCodesEnum.NOT_ALLOWED, CANT_REGISTER.message, CANT_REGISTER.code);
+      }
+
+      next();
+    } catch (err) {
+      next(err);
+    }
+  }
 };

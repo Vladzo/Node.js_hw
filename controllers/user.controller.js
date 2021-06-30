@@ -1,36 +1,58 @@
-const userService = require('../services/user.service');
+const { User } = require('../dataBase');
+const { responceCodesEnum } = require('../constants');
 
 module.exports = {
-    getAllUsers: async (req, res) => {
-        const users = await userService.getAllUsersFromDb();
+  getAllUsers: async (req, res, next) => {
+    try {
+      const users = await User.find({});
 
-        res.json(users);
-    },
-
-    getUserById: (req, res) => {
-        const { user } = req;
-        res.json(user);
-    },
-
-    createUser: async (req, res) => {
-        await userService.createNewUser(req.body);
-
-        res.json('User has been created');
-    },
-
-    removeUserById: async (req, res) => {
-        const { userId } = req.params;
-
-        await userService.removeUser(userId);
-
-        res.json('User has been removed!');
-    },
-
-    updateUserById: async (req, res) => {
-        const { userId } = req.params;
-
-        await userService.updateUser(req.body, userId);
-
-        res.json('User has been updated');
+      res.status(responceCodesEnum.OK).json(users);
+    } catch (err) {
+      next(err);
     }
+  },
+
+  getUserById: (req, res, next) => {
+    try {
+      const { user } = req;
+
+      res.status(responceCodesEnum.OK).json(user);
+    } catch (err) {
+      next(err);
+    }
+  },
+
+  createUser: async (req, res, next) => {
+    try {
+      const createdUser = await User.create(req.body);
+
+      res.status(responceCodesEnum.CREATED).json(createdUser);
+    } catch (err) {
+      next(err);
+    }
+  },
+
+  removeUserById: async (req, res, next) => {
+    try {
+      const { userId } = req.params;
+
+      await User.findOneAndRemove(userId);
+
+      res.status(responceCodesEnum.DELETE).json('User deleted!');
+    } catch (err) {
+      next(err);
+    }
+  },
+
+  updateUserById: async (req, res, next) => {
+    try {
+      const { userId } = req.params;
+
+      await User.findByIdAndUpdate(userId, req.body);
+
+      res.status(responceCodesEnum.UPDATE).json('User has been updated');
+    } catch (err) {
+      next(err);
+    }
+  }
 };
