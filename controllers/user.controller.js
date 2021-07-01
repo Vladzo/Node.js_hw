@@ -1,12 +1,12 @@
 const { User } = require('../dataBase');
-const { responceCodesEnum } = require('../constants');
+const { responseCodesEnum } = require('../constants');
 
 module.exports = {
   getAllUsers: async (req, res, next) => {
     try {
       const users = await User.find({});
 
-      res.status(responceCodesEnum.OK).json(users);
+      res.status(responseCodesEnum.OK).json(users);
     } catch (err) {
       next(err);
     }
@@ -16,7 +16,7 @@ module.exports = {
     try {
       const { user } = req;
 
-      res.status(responceCodesEnum.OK).json(user);
+      res.status(responseCodesEnum.OK).json(user);
     } catch (err) {
       next(err);
     }
@@ -26,7 +26,7 @@ module.exports = {
     try {
       const createdUser = await User.create(req.body);
 
-      res.status(responceCodesEnum.CREATED).json(createdUser);
+      res.status(responseCodesEnum.CREATED).json(createdUser);
     } catch (err) {
       next(err);
     }
@@ -38,7 +38,7 @@ module.exports = {
 
       await User.findOneAndRemove(userId);
 
-      res.status(responceCodesEnum.DELETE).json('User deleted!');
+      res.status(responseCodesEnum.DELETE).json('User deleted!');
     } catch (err) {
       next(err);
     }
@@ -50,7 +50,7 @@ module.exports = {
 
       await User.findByIdAndUpdate(userId, req.body);
 
-      res.status(responceCodesEnum.UPDATE).json('User has been updated');
+      res.status(responseCodesEnum.UPDATE).json('User has been updated');
     } catch (err) {
       next(err);
     }

@@ -1,5 +1,5 @@
 const { User } = require('../dataBase');
-const { responceCodesEnum } = require('../constants');
+const { responseCodesEnum } = require('../constants');
 const { ErrorHandler, errorMessages: { RECORD_NOT_FOUND, CANT_REGISTER } } = require('../errors');
 
 module.exports = {
@@ -10,7 +10,7 @@ module.exports = {
       const user = await User.findById(userId);
 
       if (!user) {
-        throw new ErrorHandler(responceCodesEnum.NOT_FOUND, RECORD_NOT_FOUND.message, RECORD_NOT_FOUND.code);
+        throw new ErrorHandler(responseCodesEnum.NOT_FOUND, RECORD_NOT_FOUND.message, RECORD_NOT_FOUND.code);
       }
 
       req.user = user;
@@ -27,7 +27,7 @@ module.exports = {
       const user = await User.findOne({ email });
 
       if (user) {
-        throw new ErrorHandler(responceCodesEnum.NOT_ALLOWED, CANT_REGISTER.message, CANT_REGISTER.code);
+        throw new ErrorHandler(responseCodesEnum.NOT_ALLOWED, CANT_REGISTER.message, CANT_REGISTER.code);
       }
 
       next();
