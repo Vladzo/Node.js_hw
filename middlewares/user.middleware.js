@@ -10,7 +10,7 @@ module.exports = {
     try {
       const { userId } = req.params;
 
-      const user = await User.findOne({ _id: userId });
+      const user = await User.findOne({ id: userId });
 
       if (!user) {
         throw new ErrorHandler(responseCodesEnum.NOT_FOUND, RECORD_NOT_FOUND.message, RECORD_NOT_FOUND.code);

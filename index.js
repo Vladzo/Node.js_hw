@@ -22,7 +22,7 @@ app.listen(constants.PORT, () => {
 });
 
 // eslint-disable-next-line no-unused-vars
-function _handleErrors(err, req, res) {
+function _handleErrors(err, req, res, next) {
   res
     .status(err.status)
     .json({
