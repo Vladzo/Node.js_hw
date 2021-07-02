@@ -1,5 +1,6 @@
 const { User } = require('../dataBase');
-const { responseCodesEnum } = require('../constants');
+const { responseCodesEnum, constants } = require('../constants');
+const { passwordHasher } = require('../helpers');
 
 module.exports = {
   getAllUsers: async (req, res, next) => {
@@ -24,7 +25,10 @@ module.exports = {
 
   createUser: async (req, res, next) => {
     try {
-      const createdUser = await User.create(req.body);
+      const { password } = req.body;
+
+      const hashedPassword = await passwordHasher.hash(password);
+      const createdUser = await User.create({ ...req.body, password: hashedPassword });
 
       res.status(responseCodesEnum.CREATED).json(createdUser);
     } catch (err) {
@@ -36,9 +40,9 @@ module.exports = {
     try {
       const { userId } = req.params;
 
-      await User.findOneAndRemove(userId);
+      await User.findByIdAndRemove(userId);
 
-      res.status(responseCodesEnum.DELETE).json('User deleted!');
+      res.status(responseCodesEnum.DELETE).json(constants.DELETE_ANSWER);
     } catch (err) {
       next(err);
     }
@@ -50,7 +54,7 @@ module.exports = {
 
       await User.findByIdAndUpdate(userId, req.body);
 
-      res.status(responseCodesEnum.UPDATE).json('User has been updated');
+      res.json(constants.UPDATE_ANSWER);
     } catch (err) {
       next(err);
     }

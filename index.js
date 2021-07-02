@@ -1,7 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 
-const { userRouter } = require('./routes');
+const { userRouter, authRouter } = require('./routes');
 const { constants, responseCodesEnum } = require('./constants');
 
 const app = express();
@@ -12,6 +12,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use('/users', userRouter);
+app.use('/auth', authRouter);
+
 app.use('*', _notFoundHandler);
 app.use(_handleErrors);
 
@@ -20,7 +22,7 @@ app.listen(constants.PORT, () => {
 });
 
 // eslint-disable-next-line no-unused-vars
-function _handleErrors(err, req, res, next) {
+function _handleErrors(err, req, res) {
   res
     .status(err.status)
     .json({
@@ -37,5 +39,5 @@ function _notFoundHandler(err, req, res, next) {
 }
 
 function _mongooseConnector() {
-  mongoose.connect('mongodb://localhost:27017/app-db', { useNewUrlParser: true, useUnifiedTopology: true });
+  mongoose.connect(constants.DB, { useNewUrlParser: true, useUnifiedTopology: true });
 }
