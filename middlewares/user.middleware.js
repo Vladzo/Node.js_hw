@@ -10,7 +10,7 @@ module.exports = {
     try {
       const { userId } = req.params;
 
-      const user = await User.findOne({ id: userId });
+      const user = await User.findOne({ _id: userId });
 
       if (!user) {
         throw new ErrorHandler(responseCodesEnum.NOT_FOUND, RECORD_NOT_FOUND.message, RECORD_NOT_FOUND.code);
@@ -68,7 +68,7 @@ module.exports = {
 
   checkUserIdValidity: (req, res, next) => {
     try {
-      const { error } = userIdValidator.createUser.validate(req.query.userId);
+      const { error } = userIdValidator.createUser.validate({ id: req.params.userId });
 
       if (error) {
         throw new ErrorHandler(responseCodesEnum.NOT_ALLOWED, error.details[0].message, IN_VALID.code);

@@ -5,6 +5,10 @@ require('dotenv').config();
 const { userRouter, authRouter } = require('./routes');
 const { constants, responseCodesEnum } = require('./constants');
 
+mongoose.set('useNewUrlParser', true);
+mongoose.set('useFindAndModify', false);
+mongoose.set('useCreateIndex', true);
+
 const app = express();
 
 _mongooseConnector();
