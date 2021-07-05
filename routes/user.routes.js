@@ -3,14 +3,16 @@ const router = require('express').Router();
 const { userController } = require('../controllers');
 const { userMiddleware } = require('../middlewares');
 
+router.use('/:userId', userMiddleware.checkUserIdValidity, userMiddleware.getUserByParam('userId', 'params', '_id'));
+
 router.get('/', userController.getAllUsers);
 
 router.post('/', userMiddleware.checkUserValidity, userMiddleware.canUserRegister, userController.createUser);
 
-router.get('/:userId', userMiddleware.checkUserIdValidity, userMiddleware.isUserAlreadyExist, userController.getUserById);
+router.get('/:userId', userController.getUser);
 
-router.delete('/:userId', userMiddleware.checkUserIdValidity, userMiddleware.isUserAlreadyExist, userController.removeUserById);
+router.delete('/:userId', userController.removeUserById);
 
-router.put('/:userId', userMiddleware.updateValidity, userMiddleware.isUserAlreadyExist, userController.updateUserById);
+router.put('/:userId', userMiddleware.updateValidity, userController.updateUserById);
 
 module.exports = router;

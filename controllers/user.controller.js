@@ -13,7 +13,7 @@ module.exports = {
     }
   },
 
-  getUserById: (req, res, next) => {
+  getUser: (req, res, next) => {
     try {
       const { user } = req;
 
