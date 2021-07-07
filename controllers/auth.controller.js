@@ -1,23 +1,57 @@
-const { ErrorHandler, errorMessages: { WRONG_PASSWORD_OR_EMAIL } } = require('../errors');
-const { User } = require('../dataBase');
-const { responseCodesEnum } = require('../constants');
+const { Oauth } = require('../dataBase');
+const { responseCodesEnum, constants } = require('../constants');
 const { passwordHasher } = require('../helpers');
+const { authService } = require('../services');
 
 module.exports = {
-  authorize: async (req, res, next) => {
+  login: async (req, res, next) => {
     try {
-      const { email, password } = req.body;
+      const { password: hashedPassword, _id } = req.user;
+      const { password } = req.body;
 
-      const userByEmail = await User.findOne({ email }).select('+password');
+      await passwordHasher.compare(hashedPassword, password);
 
-      if (!userByEmail) {
-        throw new ErrorHandler(responseCodesEnum.UN_AUTHORIZED, WRONG_PASSWORD_OR_EMAIL.message,
-          WRONG_PASSWORD_OR_EMAIL.code);
-      }
+      const tokenPair = authService.getTokenPair();
 
-      await passwordHasher.compare(userByEmail.password, password);
+      await Oauth.remove({ user: _id });
 
-      res.json(userByEmail);
+      await Oauth.create({ ...tokenPair, user: _id });
+
+      res.json({
+        ...tokenPair,
+        user: req.user
+      });
+    } catch (err) {
+      next(err);
+    }
+  },
+
+  logout: async (req, res, next) => {
+    try {
+      const token = req.get(constants.AUTHORIZATION);
+
+      await Oauth.remove({ accessToken: token });
+
+      res.status(responseCodesEnum.NO_CONTENT).json(constants.NO_CONTENT);
+    } catch (err) {
+      next(err);
+    }
+  },
+
+  refresh: async (req, res, next) => {
+    try {
+      const { _id } = req.user;
+      const token = req.get(constants.AUTHORIZATION);
+
+      await Oauth.remove({ refreshToken: token });
+
+      const tokenPair = authService.getTokenPair();
+
+      await Oauth.create({ ...tokenPair, user: _id });
+
+      res.json({
+        ...tokenPair, user: _id
+      });
     } catch (err) {
       next(err);
     }
