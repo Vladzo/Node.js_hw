@@ -11,8 +11,8 @@ router.post('/', userMiddleware.checkUserValidity, userMiddleware.canUserRegiste
 
 router.get('/:userId', userController.getUser);
 
-router.delete('/:userId', userController.removeUserById);
+router.delete('/:userId', userMiddleware.checkToken, userController.removeUserById);
 
-router.put('/:userId', userMiddleware.updateValidity, userController.updateUserById);
+router.put('/:userId', userMiddleware.checkToken, userMiddleware.updateValidity, userController.updateUserById);
 
 module.exports = router;

@@ -12,6 +12,6 @@ module.exports = {
   NO_CONTENT: 'NO CONTENT!',
   REFRESH: 'refresh',
   ACCESS: 'access',
-  ACCESS_TOKEN_TIME: '10m',
+  ACCESS_TOKEN_TIME: '1m',
   REFRESH_TOKEN_TIME: '10d'
 };

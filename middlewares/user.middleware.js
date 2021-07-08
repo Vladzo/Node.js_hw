@@ -1,11 +1,40 @@
-const { User } = require('../dataBase');
-const { responseCodesEnum } = require('../constants');
-const { ErrorHandler, errorMessages: { RECORD_NOT_FOUND, CANT_REGISTER, IN_VALID } } = require('../errors');
+const { User, Oauth } = require('../dataBase');
+const { responseCodesEnum, constants } = require('../constants');
+const {
+  ErrorHandler, errorMessages: {
+    RECORD_NOT_FOUND, CANT_REGISTER, IN_VALID, UN_AUTHORIZED
+  }
+} = require('../errors');
 const {
   userValidator, loginValidator, updateValidator, userIdValidator
 } = require('../validators');
+const { authService: { verifyToken } } = require('../services');
 
 module.exports = {
+  checkToken: async (req, res, next) => {
+    try {
+      const token = req.get(constants.AUTHORIZATION);
+
+      if (!token) {
+        throw new ErrorHandler(responseCodesEnum.UN_AUTHORIZED, UN_AUTHORIZED.message,
+          UN_AUTHORIZED.code);
+      }
+
+      await verifyToken(token);
+
+      const tokenObject = await Oauth.findOne({ accessToken: token });
+
+      if (!tokenObject || req.user._id.toString() !== tokenObject.user._id.toString()) {
+        throw new ErrorHandler(responseCodesEnum.UN_AUTHORIZED, UN_AUTHORIZED.message,
+          UN_AUTHORIZED.code);
+      }
+
+      next();
+    } catch (err) {
+      next(err);
+    }
+  },
+
   getUserByParam: (param, searchIn, dbField = param) => async (req, res, next) => {
     try {
       const value = req[searchIn][param];
