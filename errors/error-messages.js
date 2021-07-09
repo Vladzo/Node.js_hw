@@ -4,6 +4,11 @@ module.exports = {
     code: 4040
   },
 
+  WRONG_TEMPLATE: {
+    message: 'Wrong Template!',
+    code: 4041
+  },
+
   CANT_REGISTER: {
     message: 'User already exist!',
     code: 4050

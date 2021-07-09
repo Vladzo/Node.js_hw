@@ -1,3 +1,5 @@
+const { emailActionEnums } = require('../constants');
+const { mailService } = require('../services');
 const { User } = require('../dataBase');
 const { responseCodesEnum, constants } = require('../constants');
 const { passwordHasher } = require('../helpers');
@@ -25,10 +27,12 @@ module.exports = {
 
   createUser: async (req, res, next) => {
     try {
-      const { password } = req.body;
+      const { password, email, name } = req.body;
 
       const hashedPassword = await passwordHasher.hash(password);
       const createdUser = await User.create({ ...req.body, password: hashedPassword });
+
+      await mailService.sendEmail(email, emailActionEnums.WELCOME, { name, email });
 
       res.status(responseCodesEnum.CREATED).json(createdUser);
     } catch (err) {
@@ -40,7 +44,9 @@ module.exports = {
     try {
       const { userId } = req.params;
 
-      await User.findByIdAndRemove(userId);
+      const user = await User.findByIdAndRemove(userId);
+
+      await mailService.sendEmail(user.email, emailActionEnums.USER_DELETE, { name: user.name, email: user.email });
 
       res.status(responseCodesEnum.DELETE).json(constants.DELETE_ANSWER);
     } catch (err) {
@@ -51,8 +57,13 @@ module.exports = {
   updateUserById: async (req, res, next) => {
     try {
       const { userId } = req.params;
+      const { email } = req.user;
 
       await User.findByIdAndUpdate(userId, req.body);
+
+      const user = await User.findOne({ _id: userId });
+
+      await mailService.sendEmail(email, emailActionEnums.USER_UPDATE, { name: user.name, email: user.email, age: user.age });
 
       res.json(constants.UPDATE_ANSWER);
     } catch (err) {

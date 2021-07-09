@@ -12,6 +12,8 @@ module.exports = {
   NO_CONTENT: 'NO CONTENT!',
   REFRESH: 'refresh',
   ACCESS: 'access',
-  ACCESS_TOKEN_TIME: '1m',
-  REFRESH_TOKEN_TIME: '10d'
+  ACCESS_TOKEN_TIME: '10m',
+  REFRESH_TOKEN_TIME: '10d',
+  EMAIL: process.env.SERVICE_EMAIL || 'fsdssd@ef',
+  EMAIL_PASSWORD: process.env.SERVICE_EMAIL_PASSWORD || '123'
 };
