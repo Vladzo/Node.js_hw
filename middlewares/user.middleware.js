@@ -61,6 +61,7 @@ module.exports = {
         throw new ErrorHandler(responseCodesEnum.NOT_ALLOWED, error.details[0].message, IN_VALID.code);
       }
 
+      console.log('-------------------------------------');
       next();
     } catch (err) {
       next(err);

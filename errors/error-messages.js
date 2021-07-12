@@ -14,6 +14,16 @@ module.exports = {
     code: 4050
   },
 
+  WRONG_FILE_FORMAT: {
+    message: 'Wrong file format',
+    code: 4051
+  },
+
+  TOO_BIG_FILE: {
+    message: 'Maximum size exceeded',
+    code: 4051
+  },
+
   WRONG_PASSWORD_OR_EMAIL: {
     message: 'Wrong password or email!',
     code: 4010

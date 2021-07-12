@@ -27,14 +27,17 @@ module.exports = {
 
   createUser: async (req, res, next) => {
     try {
-      const { password, email, name } = req.body;
+      console.log(req.photo);
+      console.log('Worksssssssssssssssssssssssssssssssss');
+      const { body: { password, email, name }, photo } = req;
+      console.log(photo);
 
       const hashedPassword = await passwordHasher.hash(password);
-      const createdUser = await User.create({ ...req.body, password: hashedPassword });
+      // const createdUser = await User.create({ ...req.body, password: hashedPassword });
 
-      await mailService.sendEmail(email, emailActionEnums.WELCOME, { name, email });
+      //await mailService.sendEmail(email, emailActionEnums.WELCOME, { name, email });
 
-      res.status(responseCodesEnum.CREATED).json(createdUser);
+      res.status(responseCodesEnum.CREATED).json({ });
     } catch (err) {
       next(err);
     }
