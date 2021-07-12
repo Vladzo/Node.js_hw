@@ -14,7 +14,7 @@ module.exports = {
         throw new ErrorHandler(responseCodesEnum.NOT_ALLOWED, TOO_BIG_FILE.message, TOO_BIG_FILE.code);
       }
 
-      req.photo = avatar;
+      req.avatar = avatar;
       next();
     } catch (err) {
       next(err);

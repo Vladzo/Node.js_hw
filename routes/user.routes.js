@@ -7,8 +7,8 @@ router.use('/:userId', userMiddleware.checkUserIdValidity, userMiddleware.getUse
 
 router.get('/', userController.getAllUsers);
 
-router.post('/', filesMiddleware.checkPhoto, userMiddleware.checkUserValidity,
-  userMiddleware.canUserRegister, userController.createUser);
+router.post('/', userMiddleware.checkUserValidity,
+  userMiddleware.canUserRegister, filesMiddleware.checkPhoto, userController.createUser);
 
 router.get('/:userId', userController.getUser);
 

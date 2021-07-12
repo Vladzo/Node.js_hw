@@ -114,10 +114,10 @@ module.exports = {
     try {
       const { email } = req.body;
       const user = await User.findOne({ email });
-
       if (user) {
         throw new ErrorHandler(responseCodesEnum.NOT_ALLOWED, CANT_REGISTER.message, CANT_REGISTER.code);
       }
+      console.log(req.files);
 
       next();
     } catch (err) {

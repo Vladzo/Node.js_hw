@@ -3,6 +3,9 @@ const { Schema, model } = require('mongoose');
 const { userRolesEnum, dataBaseTablesEnum } = require('../constants');
 
 const userSchema = new Schema({
+  avatar: {
+    type: String
+  },
   name: {
     type: String,
     required: true

@@ -36,5 +36,10 @@ module.exports = {
 
   IN_VALID: {
     code: 4011
+  },
+
+  CANT_UPLOAD_FILE: {
+    message: 'The file could not be uploaded',
+    code: 5000
   }
 };

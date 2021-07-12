@@ -1,13 +1,21 @@
+const path = require('path');
+const uuid = require('uuid').v1;
+const fs = require('fs');
+const util = require('util');
+
 const { emailActionEnums } = require('../constants');
 const { mailService } = require('../services');
 const { User } = require('../dataBase');
 const { responseCodesEnum, constants } = require('../constants');
-const { passwordHasher } = require('../helpers');
+const { ErrorHandler, errorMessages: { CANT_UPLOAD_FILE } } = require('../errors');
+const { passwordHasher, photoHelper, userHelper } = require('../helpers');
+
+const mkDirPromise = util.promisify(fs.mkdir);
 
 module.exports = {
   getAllUsers: async (req, res, next) => {
     try {
-      const users = await User.find({});
+      const users = await User.find({}).lean();
 
       res.status(responseCodesEnum.OK).json(users);
     } catch (err) {
@@ -27,17 +35,32 @@ module.exports = {
 
   createUser: async (req, res, next) => {
     try {
-      console.log(req.photo);
-      console.log('Worksssssssssssssssssssssssssssssssss');
-      const { body: { password, email, name }, photo } = req;
-      console.log(photo);
+      const { body: { password, email, name }, avatar } = req;
 
       const hashedPassword = await passwordHasher.hash(password);
-      // const createdUser = await User.create({ ...req.body, password: hashedPassword });
+      const createdUser = await User.create({ ...req.body, password: hashedPassword });
 
-      //await mailService.sendEmail(email, emailActionEnums.WELCOME, { name, email });
+      // await mailService.sendEmail(email, emailActionEnums.WELCOME, { name, email });
 
-      res.status(responseCodesEnum.CREATED).json({ });
+      const { _id } = createdUser;
+
+      if (avatar) {
+        const { pathForDb, finalPath, uploadPath } = await photoHelper.photoDirBuilder(avatar.name, _id, 'users');
+
+        await mkDirPromise(uploadPath, { recursive: true });
+
+        await avatar.mv(finalPath, (err) => {
+          if (err) {
+            throw new ErrorHandler(responseCodesEnum.SERVER_ERROR, CANT_UPLOAD_FILE.message, CANT_UPLOAD_FILE.code);
+          }
+        });
+
+        await User.updateOne({ _id }, { avatar: path.join(pathForDb) });
+      }
+
+      const normalizedUser = userHelper.userNormalizator(createdUser.toObject());
+
+      res.status(responseCodesEnum.CREATED).json(normalizedUser);
     } catch (err) {
       next(err);
     }
