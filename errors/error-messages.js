@@ -23,4 +23,11 @@ module.exports = {
     message: 'Unautorized',
     code: 4010
   },
+
+  IN_VALID: {
+    message: 'Unautorized',
+    code: 4010
+  },
+
+
 };
