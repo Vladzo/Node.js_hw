@@ -9,7 +9,7 @@ module.exports = {
     code: 4041
   },
 
-  CANT_REGISTER: {S
+  CANT_REGISTER: {
     message: 'User already exist!',
     code: 4050
   },
