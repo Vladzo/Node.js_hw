@@ -9,7 +9,7 @@ module.exports = {
     code: 4041
   },
 
-  CANT_REGISTER: {
+  CANT_REGISTER: {S
     message: 'User already exist!',
     code: 4050
   },
@@ -23,8 +23,4 @@ module.exports = {
     message: 'Unautorized',
     code: 4010
   },
-
-  IN_VALID: {
-    code: 4011
-  }
 };
