@@ -17,17 +17,7 @@ module.exports = {
   WRONG_PASSWORD_OR_EMAIL: {
     message: 'Wrong password or email!',
     code: 4010
-  },
-
-  UN_AUTHORIZED: {
-    message: 'Unautorized',
-    code: 4010
-  },
-
-  IN_VALID: {
-    message: 'Unautorized',
-    code: 4010
-  },
+  }
 
 
 };
