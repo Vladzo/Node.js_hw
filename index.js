@@ -4,6 +4,7 @@ require('dotenv').config();
 
 console.log('TEST');
 console.log('TEST2');
+console.log('TEST3');
 const { userRouter, authRouter } = require('./routes');
 const { constants, responseCodesEnum } = require('./constants');
 
