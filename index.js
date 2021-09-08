@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 require('dotenv').config();
 
 console.log('TEST');
+console.log('TEST2');
 const { userRouter, authRouter } = require('./routes');
 const { constants, responseCodesEnum } = require('./constants');
 
