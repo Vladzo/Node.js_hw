@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 require('dotenv').config();
 
+console.log('TEST');
 const { userRouter, authRouter } = require('./routes');
 const { constants, responseCodesEnum } = require('./constants');
 
